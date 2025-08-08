@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Our Sky — Anniversary</title>
   <style>
     :root {
@@ -13,11 +13,18 @@
       --text-dim: rgba(238, 238, 255, 0.7);
     }
     
+    * {
+      box-sizing: border-box;
+      touch-action: none;
+    }
+    
     html, body {
       height: 100%;
       margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
     
     body {
@@ -34,9 +41,10 @@
     
     header {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px;
+      padding: 12px 16px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
       backdrop-filter: blur(8px);
       z-index: 10;
@@ -45,13 +53,14 @@
     
     .title {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
+      margin-right: 12px;
     }
     
     .logo {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: 8px;
       background: linear-gradient(135deg, #2a1b4d, #3b2b6a);
       display: flex;
@@ -60,42 +69,50 @@
       font-weight: 700;
       color: #ffd;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
     }
     
     h1 {
-      font-size: 18px;
+      font-size: 16px;
       margin: 0;
       font-weight: 600;
+      line-height: 1.3;
     }
     
     .controls {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
+      margin-top: 8px;
+      width: 100%;
+      justify-content: space-between;
     }
     
     button {
       background: var(--panel);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 8px 16px;
-      border-radius: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
       color: var(--accent);
       cursor: pointer;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 13px;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
+      white-space: nowrap;
     }
     
     button:hover {
       background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
     }
     
     button:active {
-      transform: translateY(0);
+      transform: scale(0.98);
     }
     
     button.toggle {
@@ -106,6 +123,7 @@
       flex: 1;
       position: relative;
       overflow: hidden;
+      touch-action: none;
     }
     
     canvas {
@@ -116,32 +134,36 @@
     
     .legend {
       position: absolute;
-      left: 18px;
-      bottom: 18px;
+      left: 12px;
+      bottom: 12px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
-      padding: 12px 16px;
-      border-radius: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(8px);
       z-index: 5;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      font-size: 13px;
+      max-width: calc(100% - 24px);
     }
     
     .modal {
       position: absolute;
-      right: 18px;
-      top: 18px;
-      width: 320px;
-      max-height: calc(100% - 36px);
+      right: 12px;
+      top: 12px;
+      width: 90%;
+      max-width: 320px;
+      max-height: calc(100% - 24px);
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 10px;
+      padding: 14px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(8px);
       z-index: 5;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       overflow-y: auto;
       transition: transform 0.3s ease, opacity 0.3s ease;
+      -webkit-overflow-scrolling: touch;
     }
     
     .modal.hidden {
@@ -151,46 +173,46 @@
     }
     
     .modal h3 {
-      margin: 0 0 12px 0;
+      margin: 0 0 10px 0;
       font-weight: 600;
       color: var(--accent);
+      font-size: 16px;
     }
     
     .small {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-dim);
+      line-height: 1.4;
     }
     
     .star-btn {
       display: block;
       width: 100%;
       text-align: left;
-      padding: 10px 12px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px dashed rgba(255, 255, 255, 0.1);
       margin-top: 8px;
       background: rgba(255, 255, 255, 0.03);
       color: var(--text);
-      font-size: 14px;
+      font-size: 13px;
       transition: all 0.2s ease;
     }
     
-    .star-btn:hover {
+    .star-btn:active {
       background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.2);
     }
     
     .footer {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-dim);
-      margin-top: 16px;
-      padding-top: 16px;
+      margin-top: 14px;
+      padding-top: 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .heart {
       color: var(--accent);
-      font-size: 20px;
     }
     
     .constellation {
@@ -199,57 +221,41 @@
     }
     
     .modal-content {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     
     .modal-content img {
       width: 100%;
       border-radius: 8px;
-      margin-top: 12px;
+      margin-top: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
     .modal-close {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 10px;
+      right: 10px;
       background: none;
       border: none;
       color: var(--text-dim);
       font-size: 18px;
       cursor: pointer;
       padding: 4px;
-    }
-    
-    .modal-close:hover {
-      color: var(--text);
-    }
-    
-    .date-time-controls {
+      width: 30px;
+      height: 30px;
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
+      align-items: center;
+      justify-content: center;
     }
     
-    .date-time-controls input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      padding: 6px 8px;
+    .modal-close:active {
       color: var(--text);
-      font-size: 13px;
-      flex: 1;
-    }
-    
-    .date-time-controls button {
-      padding: 6px 10px;
-      font-size: 13px;
     }
     
     .zoom-controls {
       position: absolute;
-      right: 18px;
-      bottom: 18px;
+      right: 12px;
+      bottom: 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -257,45 +263,81 @@
     }
     
     .zoom-controls button {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 0;
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+    
+    .mobile-message-toggle {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      width: 36px;
+      height: 36px;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      display: none;
     }
     
     @media (max-width: 768px) {
       header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
+        padding: 10px 12px;
+      }
+      
+      .logo {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+      }
+      
+      h1 {
+        font-size: 15px;
       }
       
       .controls {
-        width: 100%;
-        justify-content: space-between;
+        gap: 6px;
       }
       
       button {
-        flex: 1;
-        justify-content: center;
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+      
+      .mobile-message-toggle {
+        display: flex;
       }
       
       .modal {
-        width: 280px;
+        width: calc(100% - 24px);
+        max-width: none;
       }
     }
     
     @media (max-width: 480px) {
-      .modal {
-        display: none;
+      .legend {
+        font-size: 12px;
+        padding: 8px 10px;
       }
       
-      .legend {
-        max-width: calc(100% - 36px);
+      .zoom-controls button {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+      
+      .modal {
+        padding: 12px;
       }
     }
     
@@ -305,20 +347,12 @@
       50% { opacity: 1; }
     }
     
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-    
     .twinkle {
       animation: twinkle 3s infinite ease-in-out;
     }
-    
-    .float {
-      animation: float 6s infinite ease-in-out;
-    }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#051025">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 <div id="app">
@@ -327,7 +361,7 @@
       <div class="logo">★</div>
       <div>
         <h1>Our Sky — 28 Oct 2025</h1>
-        <div class="small">Bandar Lampung, Indonesia • Click a star to reveal a message</div>
+        <div class="small">Bandar Lampung, Indonesia</div>
       </div>
     </div>
     <div class="controls">
@@ -337,11 +371,11 @@
       </button>
       <button id="resetView">
         <span>🔭</span>
-        <span>Reset View</span>
+        <span>Reset</span>
       </button>
       <button id="downloadPNG">
         <span>📷</span>
-        <span>Save Image</span>
+        <span>Save</span>
       </button>
     </div>
   </header>
@@ -349,11 +383,12 @@
   <div id="canvasWrap">
     <canvas id="skyCanvas"></canvas>
 
+    <button class="mobile-message-toggle" id="mobileToggleMessages">💬</button>
+
     <div class="legend">
       <div><strong>Mode:</strong> <span id="modeLabel">Realistic</span></div>
-      <div class="small"><span id="dateLabel"></span> • <span id="locationLabel">Bandar Lampung</span></div>
-      <div class="small"><span id="coordinatesLabel">-5.4296° N, 105.2629° E</span></div>
-      <div style="margin-top:6px"><span class="small">Tip: Drag to pan, scroll/pinch to zoom</span></div>
+      <div class="small"><span id="dateLabel"></span></div>
+      <div class="small">Tap stars for messages</div>
     </div>
 
     <div class="zoom-controls">
@@ -361,13 +396,13 @@
       <button id="zoomOut">-</button>
     </div>
 
-    <div class="modal" id="infoPanel">
+    <div class="modal hidden" id="infoPanel">
       <button class="modal-close" id="closeModal">×</button>
       <h3>Star Messages</h3>
-      <div class="small">Click any star to view its message. Edit the code to customize these messages.</div>
+      <div class="small">Tap any star to view its message</div>
       <div id="messagesList"></div>
       <div class="footer">
-        Made with <span class="heart">♥</span> — Edit the <code>STAR_CATALOG</code> and <code>starMessages</code> in the HTML file to personalize
+        Made with <span class="heart">♥</span>
       </div>
     </div>
 
@@ -384,94 +419,81 @@
 
 <script>
 // --------------------------- CONFIG ---------------------------
-// Change these if you want a different date/location
-const TARGET_DATE = new Date('2025-10-28T20:00:00+07:00'); // local time in Bandar Lampung
-const TARGET_LAT = -5.4296 * Math.PI/180; // radians
-const TARGET_LON = 105.2629 * Math.PI/180; // radians (East positive)
+const TARGET_DATE = new Date('2025-10-28T20:00:00+07:00');
+const TARGET_LAT = -5.4296 * Math.PI/180;
+const TARGET_LON = 105.2629 * Math.PI/180;
 const LOCATION_NAME = "Bandar Lampung, Indonesia";
 
-// Extended bright-star catalog with constellations and additional data
+// Star catalog with essential bright stars
 const STAR_CATALOG = [
-  {id:'Sirius', name: 'Sirius (α Canis Majoris)', ra:6.752481, dec:-16.716116, mag:-1.46, const: 'CMa', dist: 8.6, spectral: 'A1V', messageKey: 'sirius'},
-  {id:'Canopus', name: 'Canopus (α Carinae)', ra:6.399199, dec:-52.695661, mag:-0.74, const: 'Car', dist: 310, spectral: 'F0II', messageKey: 'canopus'},
-  {id:'Arcturus', name: 'Arcturus (α Boötis)', ra:14.261208, dec:19.182417, mag:-0.05, const: 'Boo', dist: 36.7, spectral: 'K1.5III', messageKey: 'arcturus'},
-  {id:'Vega', name: 'Vega (α Lyrae)', ra:18.615649, dec:38.783689, mag:0.03, const: 'Lyr', dist: 25, spectral: 'A0V', messageKey: 'vega'},
-  {id:'Capella', name: 'Capella (α Aurigae)', ra:5.278155, dec:45.997991, mag:0.08, const: 'Aur', dist: 42.8, spectral: 'G3III', messageKey: 'capella'},
-  {id:'Rigel', name: 'Rigel (β Orionis)', ra:5.242298, dec:-8.201640, mag:0.12, const: 'Ori', dist: 860, spectral: 'B8Ia', messageKey: 'rigel'},
-  {id:'Procyon', name: 'Procyon (α Canis Minoris)', ra:7.655033, dec:5.225, mag:0.38, const: 'CMi', dist: 11.46, spectral: 'F5IV-V', messageKey: 'procyon'},
-  {id:'Betelgeuse', name: 'Betelgeuse (α Orionis)', ra:5.919529, dec:7.407064, mag:0.42, const: 'Ori', dist: 548, spectral: 'M1-M2Ia-Iab', messageKey: 'betelgeuse'},
-  {id:'Achernar', name: 'Achernar (α Eridani)', ra:1.628571, dec:-57.236753, mag:0.46, const: 'Eri', dist: 139, spectral: 'B3Vpe', messageKey: 'achernar'},
-  {id:'Hadar', name: 'Hadar (β Centauri)', ra:14.063724, dec:-60.373039, mag:0.61, const: 'Cen', dist: 390, spectral: 'B1III', messageKey: 'hadar'},
-  {id:'Altair', name: 'Altair (α Aquilae)', ra:19.846389, dec:8.868322, mag:0.77, const: 'Aql', dist: 16.73, spectral: 'A7V', messageKey: 'altair'},
-  {id:'Aldebaran', name: 'Aldebaran (α Tauri)', ra:4.598677, dec:16.509302, mag:0.85, const: 'Tau', dist: 65.3, spectral: 'K5III', messageKey: 'aldebaran'},
-  {id:'Antares', name: 'Antares (α Scorpii)', ra:16.490129, dec:-26.431946, mag:1.06, const: 'Sco', dist: 550, spectral: 'M1.5Iab', messageKey: 'antares'},
-  {id:'Spica', name: 'Spica (α Virginis)', ra:13.419884, dec:-11.161322, mag:0.98, const: 'Vir', dist: 250, spectral: 'B1III-IV', messageKey: 'spica'},
-  {id:'Pollux', name: 'Pollux (β Geminorum)', ra:7.755263, dec:28.026195, mag:1.14, const: 'Gem', dist: 33.78, spectral: 'K0III', messageKey: 'pollux'}
+  {id:'Sirius', name: 'Sirius', ra:6.752481, dec:-16.716116, mag:-1.46, dist: 8.6, messageKey: 'sirius'},
+  {id:'Canopus', name: 'Canopus', ra:6.399199, dec:-52.695661, mag:-0.74, dist: 310, messageKey: 'canopus'},
+  {id:'Arcturus', name: 'Arcturus', ra:14.261208, dec:19.182417, mag:-0.05, dist: 36.7, messageKey: 'arcturus'},
+  {id:'Vega', name: 'Vega', ra:18.615649, dec:38.783689, mag:0.03, dist: 25, messageKey: 'vega'},
+  {id:'Capella', name: 'Capella', ra:5.278155, dec:45.997991, mag:0.08, dist: 42.8, messageKey: 'capella'},
+  {id:'Rigel', name: 'Rigel', ra:5.242298, dec:-8.201640, mag:0.12, dist: 860, messageKey: 'rigel'},
+  {id:'Procyon', name: 'Procyon', ra:7.655033, dec:5.225, mag:0.38, dist: 11.46, messageKey: 'procyon'},
+  {id:'Betelgeuse', name: 'Betelgeuse', ra:5.919529, dec:7.407064, mag:0.42, dist: 548, messageKey: 'betelgeuse'},
+  {id:'Achernar', name: 'Achernar', ra:1.628571, dec:-57.236753, mag:0.46, dist: 139, messageKey: 'achernar'},
+  {id:'Hadar', name: 'Hadar', ra:14.063724, dec:-60.373039, mag:0.61, dist: 390, messageKey: 'hadar'},
+  {id:'Altair', name: 'Altair', ra:19.846389, dec:8.868322, mag:0.77, dist: 16.73, messageKey: 'altair'},
+  {id:'Aldebaran', name: 'Aldebaran', ra:4.598677, dec:16.509302, mag:0.85, dist: 65.3, messageKey: 'aldebaran'},
+  {id:'Antares', name: 'Antares', ra:16.490129, dec:-26.431946, mag:1.06, dist: 550, messageKey: 'antares'},
+  {id:'Spica', name: 'Spica', ra:13.419884, dec:-11.161322, mag:0.98, dist: 250, messageKey: 'spica'},
+  {id:'Pollux', name: 'Pollux', ra:7.755263, dec:28.026195, mag:1.14, dist: 33.78, messageKey: 'pollux'}
 ];
 
-// Constellation lines data (simplified)
+// Constellation lines data
 const CONSTELLATION_LINES = [
-  // Orion
   {from: 'Betelgeuse', to: 'Rigel'},
   {from: 'Betelgeuse', to: 'Bellatrix'},
-  {from: 'Bellatrix', to: 'Mintaka'},
-  {from: 'Mintaka', to: 'Alnilam'},
-  {from: 'Alnilam', to: 'Alnitak'},
-  {from: 'Alnitak', to: 'Rigel'},
-  {from: 'Rigel', to: 'Saiph'},
-  {from: 'Saiph', to: 'Alnitak'},
-  
-  // Canis Major
-  {from: 'Sirius', to: 'Mirzam'},
-  {from: 'Mirzam', to: 'Wezen'},
-  {from: 'Wezen', to: 'Adhara'},
-  
-  // Gemini
-  {from: 'Pollux', to: 'Castor'},
-  {from: 'Castor', to: 'Alhena'},
-  {from: 'Alhena', to: 'Wasat'},
-  
-  // Taurus
-  {from: 'Aldebaran', to: 'Elnath'},
-  {from: 'Elnath', to: 'Tianguan'}
+  {from: 'Rigel', to: 'Saiph'}
 ];
 
-// Detailed messages with dates and images
+// Personalized messages
 const starMessages = {
   'sirius': {
     title: 'Sirius - The Brightest Star',
     date: '2023-05-15',
-    text: 'Remember our first trip to the beach under the stars? Sirius was shining so brightly that night, just like the sparkle in your eyes when you laugh. This star has been a beacon for navigators for centuries, just like you\'ve been my guiding light.',
-    image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    text: 'Remember our first trip under the stars? Sirius was shining brightly that night, just like the sparkle in your eyes.',
+    image: '',
     distance: '8.6 light years',
     magnitude: '-1.46'
-  },
-  'canopus': {
-    title: 'Canopus - The Southern Star',
-    date: '2023-08-22',
-    text: 'On your birthday last year, we stayed up late watching the stars from the backyard. Canopus was just peeking over the horizon. Did you know it\'s the second brightest star in the night sky? To me, you\'ll always be the brightest.',
-    image: 'https://images.unsplash.com/photo-1498557850523-fd3d118b962e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    distance: '310 light years',
-    magnitude: '-0.74'
   },
   'vega': {
     title: 'Vega - The Harp Star',
     date: '2024-01-10',
-    text: 'The night we listened to your favorite songs under the stars, Vega was directly overhead. In mythology, Vega represents the harp of Orpheus. Whenever I hear our song now, I look up and think of you.',
-    image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    text: 'The night we listened to your favorite songs under the stars, Vega was directly overhead. I think of you whenever I see it now.',
+    image: '',
     distance: '25 light years',
     magnitude: '0.03'
-  },
-  // Add more messages as needed
+  }
 };
 
-// --------------------------- END CONFIG ---------------------------
+// --------------------------- INITIALIZATION ---------------------------
+const canvas = document.getElementById('skyCanvas');
+const ctx = canvas.getContext('2d', { alpha: false });
+let W, H, centerX, centerY, scale = 1, panX = 0, panY = 0;
+let mode = 'realistic';
+let isDragging = false;
+let lastX = 0, lastY = 0;
+let animationFrameId = null;
+let hoveredStar = null;
+let touchZoomInitialDistance = null;
 
-// Utility functions (angles in radians unless noted)
+// Performance optimization
+const offscreenCanvas = document.createElement('canvas');
+const offscreenCtx = offscreenCanvas.getContext('2d');
+let backgroundCache = null;
+
+// Mobile detection
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+// --------------------------- UTILITY FUNCTIONS ---------------------------
 function toRad(d) { return d * Math.PI / 180 }
 function toDeg(r) { return r * 180 / Math.PI }
 
-// Julian Date from JS Date (UTC)
 function dateToJD(date) {
   const Y = date.getUTCFullYear();
   const M = date.getUTCMonth() + 1;
@@ -480,33 +502,26 @@ function dateToJD(date) {
   if (m <= 2) { y = Y - 1; m = M + 12; }
   const A = Math.floor(y / 100);
   const B = 2 - A + Math.floor(A / 4);
-  const JD = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + D + B - 1524.5;
-  return JD;
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + D + B - 1524.5;
 }
 
-// Greenwich Sidereal Time in radians
 function gstFromJD(JD) {
   const T = (JD - 2451545.0) / 36525.0;
-  let S = 280.46061837 + 360.98564736629 * (JD - 2451545.0) + 0.000387933 * T * T - (T * T * T) / 38710000.0; // degrees
+  let S = 280.46061837 + 360.98564736629 * (JD - 2451545.0) + 0.000387933 * T * T - (T * T * T) / 38710000.0;
   S = ((S % 360) + 360) % 360;
   return toRad(S);
 }
 
-// Convert RA(hours) and Dec(deg) to Alt/Az for given date and observer
 function raDecToAltAz(raHours, decDeg, date, latRad, lonRad) {
   const jd = dateToJD(date);
   const gst = gstFromJD(jd);
-  // Local Sidereal Time in radians
   const lst = (gst + lonRad) % (2 * Math.PI);
   const ra = toRad(raHours * 15.0);
   const dec = toRad(decDeg);
-  let ha = lst - ra; // hour angle
-  // normalize
+  let ha = lst - ra;
   ha = ((ha + Math.PI) % (2 * Math.PI)) - Math.PI;
-  // altitude
   const sinAlt = Math.sin(dec) * Math.sin(latRad) + Math.cos(dec) * Math.cos(latRad) * Math.cos(ha);
   const alt = Math.asin(sinAlt);
-  // azimuth (measured from north toward east)
   const y = -Math.sin(ha) * Math.cos(dec);
   const x = Math.cos(latRad) * Math.sin(dec) - Math.sin(latRad) * Math.cos(dec) * Math.cos(ha);
   let az = Math.atan2(y, x);
@@ -514,20 +529,7 @@ function raDecToAltAz(raHours, decDeg, date, latRad, lonRad) {
   return { alt, az };
 }
 
-// --------------------------- Canvas / Render ---------------------------
-const canvas = document.getElementById('skyCanvas');
-const ctx = canvas.getContext('2d', { alpha: false });
-let W, H, centerX, centerY, scale = 1, panX = 0, panY = 0;
-let mode = 'realistic'; // or 'artistic'
-let isDragging = false;
-let lastX = 0, lastY = 0;
-let animationFrameId = null;
-
-// Performance optimization
-const offscreenCanvas = document.createElement('canvas');
-const offscreenCtx = offscreenCanvas.getContext('2d');
-let backgroundCache = null;
-
+// --------------------------- RENDERING FUNCTIONS ---------------------------
 function resize() {
   const dpr = window.devicePixelRatio || 1;
   W = canvas.clientWidth;
@@ -540,8 +542,6 @@ function resize() {
   offscreenCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   centerX = W / 2;
   centerY = H / 2;
-  
-  // Clear cache when resizing
   backgroundCache = null;
 }
 
@@ -552,19 +552,15 @@ window.addEventListener('resize', () => {
 
 resize();
 
-// Compute projected x,y from az,alt -> simple azimuthal equidistant projection
 function projectAzAlt(az, alt) {
-  // alt: -pi/2..pi/2, az: 0..2pi (0 = north)
-  // we'll map horizon to radius = 0.95*min(W,H)/2, zenith at center
   const rMax = Math.min(W, H) * 0.45 * scale;
-  const coalt = Math.PI / 2 - alt; // zenith distance
+  const coalt = Math.PI / 2 - alt;
   const r = (coalt / (Math.PI / 2)) * rMax;
   const x = centerX + (r * Math.sin(az)) + panX;
   const y = centerY - (r * Math.cos(az)) + panY;
   return { x, y, r };
 }
 
-// Precompute positions for realistic mode
 function computeRealisticPositions() {
   const positions = [];
   STAR_CATALOG.forEach(s => {
@@ -575,9 +571,7 @@ function computeRealisticPositions() {
       alt,
       az,
       mag: s.mag,
-      constellation: s.const,
       distance: s.dist,
-      spectral: s.spectral,
       messageKey: s.messageKey
     });
   });
@@ -586,17 +580,14 @@ function computeRealisticPositions() {
 
 let realisticPositions = computeRealisticPositions();
 
-// Generate constellation lines
 function generateConstellationLines() {
   const lines = [];
   const starMap = {};
   
-  // Create a map of star positions by ID
   realisticPositions.forEach(star => {
     starMap[star.id] = star;
   });
   
-  // Process each constellation line
   CONSTELLATION_LINES.forEach(line => {
     const fromStar = starMap[line.from];
     const toStar = starMap[line.to];
@@ -619,369 +610,80 @@ function generateConstellationLines() {
   return lines;
 }
 
-// Artistic starfield generator with better distribution
-function generateArtisticStars(count = 300) {
+let constellationLines = generateConstellationLines();
+
+function generateArtisticStars(count = 200) {
   const arr = [];
-  
-  // Create a more natural distribution with some clustering
   for (let i = 0; i < count; i++) {
-    // 70% chance to be randomly placed
-    // 30% chance to be in a cluster
-    if (Math.random() < 0.7) {
-      arr.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        mag: Math.random() * 3,
-        tw: Math.random() * 1.2,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        cluster: false
-      });
-    } else {
-      // Create a cluster
-      const clusterX = Math.random() * W;
-      const clusterY = Math.random() * H;
-      const clusterSize = 3 + Math.floor(Math.random() * 5);
-      
-      for (let j = 0; j < clusterSize; j++) {
-        arr.push({
-          x: clusterX + (Math.random() - 0.5) * 50,
-          y: clusterY + (Math.random() - 0.5) * 50,
-          mag: Math.random() * 2.5, // Cluster stars are generally brighter
-          tw: 0.5 + Math.random() * 0.7,
-          vx: (Math.random() - 0.5) * 0.1,
-          vy: (Math.random() - 0.5) * 0.1,
-          cluster: true
-        });
-      }
-    }
+    arr.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      mag: Math.random() * 3,
+      vx: (Math.random() - 0.5) * 0.1,
+      vy: (Math.random() - 0.5) * 0.1
+    });
   }
-  
   return arr;
 }
 
-let artisticStars = generateArtisticStars(400);
-let constellationLines = generateConstellationLines();
+let artisticStars = generateArtisticStars(isMobile ? 150 : 250);
 
-// Interaction
-let hoveredStar = null;
-
-function handlePointerMove(e) {
-  const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
-  hoveredStar = findStarAt(mx, my);
-  canvas.style.cursor = hoveredStar ? 'pointer' : 'grab';
+function isPointInView(x, y) {
+  const buffer = 100;
+  return x > -buffer && x < W + buffer && y > -buffer && y < H + buffer;
 }
 
-canvas.addEventListener('mousemove', handlePointerMove);
-canvas.addEventListener('touchmove', (e) => {
-  if (e.touches.length === 1) {
-    handlePointerMove(e.touches[0]);
-  }
-});
-
-canvas.addEventListener('click', e => {
-  if (!hoveredStar) return;
-  openStarModal(hoveredStar);
-});
-
-// Basic hit test with improved performance
-function findStarAt(mx, my) {
-  if (mode === 'realistic') {
-    // Check stars in reverse order (so brighter stars are prioritized)
-    for (let i = realisticPositions.length - 1; i >= 0; i--) {
-      const p = realisticPositions[i];
-      if (p.alt < -0.1) continue; // Skip stars below horizon
-      
-      const proj = projectAzAlt(p.az, p.alt);
-      const rad = Math.max(3, 6 - (p.mag || 2));
-      
-      if (Math.hypot(mx - proj.x, my - proj.y) < rad + 6) {
-        return {
-          type: 'real',
-          id: p.id,
-          name: p.name,
-          proj,
-          mag: p.mag,
-          constellation: p.constellation,
-          distance: p.distance,
-          spectral: p.spectral,
-          messageKey: p.messageKey
-        };
-      }
-    }
-  } else {
-    // For artistic mode, only check the brightest stars for performance
-    const brightStars = artisticStars.filter(s => s.mag < 1.5);
-    for (const s of brightStars) {
-      const rad = 2 + (3 - Math.min(3, s.mag));
-      if (Math.hypot(mx - s.x, my - s.y) < rad + 6) {
-        return {
-          type: 'art',
-          id: null,
-          proj: { x: s.x, y: s.y },
-          mag: s.mag,
-          star: s
-        };
-      }
-    }
-  }
-  return null;
-}
-
-function openStarModal(hit) {
-  const modal = document.getElementById('starModal');
-  const content = document.getElementById('starModalContent');
-  const title = document.getElementById('starModalTitle');
-  const info = document.getElementById('starModalInfo');
-  const text = document.getElementById('starModalText');
-  
-  // Hide the messages panel
-  document.getElementById('infoPanel').classList.add('hidden');
-  
-  if (hit.type === 'real' && hit.messageKey && starMessages[hit.messageKey]) {
-    const data = starMessages[hit.messageKey];
-    title.textContent = data.title || hit.name || hit.id;
-    
-    let infoText = `Magnitude: ${hit.mag.toFixed(2)}`;
-    if (hit.distance) infoText += ` • Distance: ${hit.distance} light years`;
-    if (hit.spectral) infoText += ` • Spectral: ${hit.spectral}`;
-    if (hit.constellation) infoText += ` • Constellation: ${hit.constellation}`;
-    
-    info.textContent = infoText;
-    
-    let contentHTML = `<p>${data.text}</p>`;
-    if (data.date) {
-      contentHTML += `<p class="small">${new Date(data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>`;
-    }
-    if (data.image) {
-      contentHTML += `<img src="${data.image}" alt="${data.title}">`;
-    }
-    
-    text.innerHTML = contentHTML;
-  } else {
-    // Default message for stars without specific data
-    title.textContent = hit.id || 'A Special Star';
-    info.textContent = `Magnitude: ${hit.mag.toFixed(2)}`;
-    text.innerHTML = `<p>This star shines bright in our sky, just like you shine in my life. Every time I look up, I'm reminded of you.</p>
-      <p class="small">Edit the HTML file to add a custom message for this star.</p>`;
-  }
-  
-  modal.classList.remove('hidden');
-}
-
-function closeStarModal() {
-  document.getElementById('starModal').classList.add('hidden');
-  document.getElementById('infoPanel').classList.remove('hidden');
-}
-
-// Background gradient cache for performance
 function drawBackground() {
   if (backgroundCache) {
-    ctx.drawImage(backgroundCache, 0, 0);
+    offscreenCtx.drawImage(backgroundCache, 0, 0);
     return;
   }
   
-  // Create gradient
-  const g = ctx.createLinearGradient(0, 0, 0, H);
+  const g = offscreenCtx.createLinearGradient(0, 0, 0, H);
   g.addColorStop(0, 'rgba(10, 12, 25, 0.85)');
   g.addColorStop(1, 'rgba(6, 8, 18, 0.95)');
   
-  // Draw to offscreen canvas
   offscreenCtx.fillStyle = g;
   offscreenCtx.fillRect(0, 0, W, H);
   
-  // Add some subtle noise for texture
-  offscreenCtx.globalAlpha = 0.02;
-  for (let i = 0; i < 1000; i++) {
-    const x = Math.random() * W;
-    const y = Math.random() * H;
-    const r = 1 + Math.random() * 3;
-    offscreenCtx.fillStyle = `hsl(${Math.random() * 60 + 200}, 50%, 80%)`;
-    offscreenCtx.beginPath();
-    offscreenCtx.arc(x, y, r, 0, Math.PI * 2);
-    offscreenCtx.fill();
-  }
-  offscreenCtx.globalAlpha = 1;
-  
-  // Cache the background
   backgroundCache = document.createElement('canvas');
   backgroundCache.width = W;
   backgroundCache.height = H;
   backgroundCache.getContext('2d').drawImage(offscreenCanvas, 0, 0);
-  
-  // Draw to main canvas
-  ctx.drawImage(offscreenCanvas, 0, 0);
-}
-
-// Render loop with performance optimizations
-let lastRenderTime = 0;
-const renderInterval = 1000 / 60; // Target 60 FPS
-
-function render(currentTime) {
-  // Throttle rendering for performance
-  if (currentTime - lastRenderTime < renderInterval) {
-    animationFrameId = requestAnimationFrame(render);
-    return;
-  }
-  
-  lastRenderTime = currentTime;
-  
-  // Clear the offscreen canvas
-  offscreenCtx.clearRect(0, 0, W, H);
-  
-  // Draw background (from cache if available)
-  drawBackground();
-  
-  if (mode === 'realistic') {
-    // Draw constellation lines first (behind stars)
-    drawConstellationLines();
-    
-    // Draw stars
-    realisticPositions.forEach(p => {
-      if (p.alt < -0.1) return; // below horizon (a little buffer)
-      
-      const proj = projectAzAlt(p.az, p.alt);
-      const size = Math.max(1.2, 6 - p.mag);
-      
-      // Twinkle effect
-      const tw = 0.6 + 0.4 * Math.sin(currentTime / 300 + (p.id.length));
-      
-      // Only draw stars that are visible in the current view
-      if (isPointInView(proj.x, proj.y)) {
-        drawStar(proj.x, proj.y, size * tw, p.id, p.mag);
-      }
-    });
-    
-    // Draw heart marker for zenith of event time
-    const eventZenith = { alt: Math.PI / 2 - 0.2, az: Math.PI / 4 }; // decorative
-    const evp = projectAzAlt(eventZenith.az, eventZenith.alt);
-    drawHeart(evp.x, evp.y);
-    
-    // Draw hover effect
-    if (hoveredStar && hoveredStar.type === 'real') {
-      drawHoverEffect(hoveredStar.proj.x, hoveredStar.proj.y, hoveredStar.mag);
-    }
-  } else {
-    // Artistic particle field
-    artisticStars.forEach(s => {
-      // Update position with velocity
-      s.x += s.vx;
-      s.y += s.vy;
-      
-      // Wrap around edges
-      if (s.x < -50) s.x = W + 50;
-      if (s.x > W + 50) s.x = -50;
-      if (s.y < -50) s.y = H + 50;
-      if (s.y > H + 50) s.y = -50;
-      
-      // Only draw stars that are visible in the current view
-      if (isPointInView(s.x, s.y)) {
-        drawGlowing(s.x, s.y, 1 + (3 - Math.min(3, s.mag)) * 0.6, s.mag);
-      }
-    });
-    
-    // Center big glowing heart
-    drawBigHeart(centerX + panX, centerY + panY);
-    
-    // Draw hover effect
-    if (hoveredStar && hoveredStar.type === 'art') {
-      drawHoverEffect(hoveredStar.proj.x, hoveredStar.proj.y, hoveredStar.mag);
-    }
-  }
-  
-  // Draw to main canvas
-  ctx.drawImage(offscreenCanvas, 0, 0);
-  
-  animationFrameId = requestAnimationFrame(render);
-}
-
-function isPointInView(x, y) {
-  // Simple viewport culling for performance
-  const buffer = 100; // pixels
-  return x > -buffer && x < W + buffer && y > -buffer && y < H + buffer;
-}
-
-function drawConstellationLines() {
-  constellationLines.forEach(line => {
-    offscreenCtx.beginPath();
-    offscreenCtx.moveTo(line.fromX, line.fromY);
-    offscreenCtx.lineTo(line.toX, line.toY);
-    offscreenCtx.strokeStyle = 'rgba(180, 200, 255, 0.15)';
-    offscreenCtx.lineWidth = 1;
-    offscreenCtx.stroke();
-  });
 }
 
 function drawStar(x, y, size, name, mag) {
-  // Use HSL colors for more natural star colors based on magnitude
-  let hue = 200; // Default blue-white
-  let saturation = 50;
-  let lightness = 90;
+  const hue = 200;
+  const saturation = 50;
+  const lightness = 90 - Math.max(0, mag) * 5;
   
-  // Adjust color based on magnitude (brighter stars are whiter)
-  if (mag < 0) {
-    // Very bright stars (like Sirius)
-    hue = 200;
-    saturation = 20;
-    lightness = 95;
-  } else if (mag < 1) {
-    // Bright stars
-    hue = 210;
-    saturation = 30;
-    lightness = 90;
-  } else {
-    // Dimmer stars
-    hue = 220 + Math.random() * 40;
-    saturation = 40 + Math.random() * 30;
-    lightness = 70 + Math.random() * 20;
-  }
+  const g = offscreenCtx.createRadialGradient(x, y, 0, x, y, size * 3);
+  g.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`);
+  g.addColorStop(0.7, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.2)`);
+  g.addColorStop(1, 'transparent');
   
-  // Core glow
-  const coreGradient = offscreenCtx.createRadialGradient(x, y, 0, x, y, size * 1.5);
-  coreGradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`);
-  coreGradient.addColorStop(0.7, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.2)`);
-  coreGradient.addColorStop(1, 'transparent');
-  
-  // Outer glow
-  const outerGradient = offscreenCtx.createRadialGradient(x, y, 0, x, y, size * 4);
-  outerGradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.3)`);
-  outerGradient.addColorStop(0.5, `hsla(${hue + 10}, ${saturation - 10}%, ${lightness - 10}%, 0.1)`);
-  outerGradient.addColorStop(1, 'transparent');
-  
-  // Draw outer glow first
   offscreenCtx.save();
   offscreenCtx.globalCompositeOperation = 'lighter';
-  offscreenCtx.fillStyle = outerGradient;
-  offscreenCtx.beginPath();
-  offscreenCtx.arc(x, y, size * 4, 0, Math.PI * 2);
-  offscreenCtx.fill();
-  
-  // Then core glow
-  offscreenCtx.fillStyle = coreGradient;
+  offscreenCtx.fillStyle = g;
   offscreenCtx.beginPath();
   offscreenCtx.arc(x, y, size * 1.5, 0, Math.PI * 2);
   offscreenCtx.fill();
   
-  // Finally the bright core
   offscreenCtx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   offscreenCtx.beginPath();
   offscreenCtx.arc(x, y, size * 0.5, 0, Math.PI * 2);
   offscreenCtx.fill();
   offscreenCtx.restore();
   
-  // Draw star name for bright stars
-  if (mag < 1 && isPointInView(x, y + 20)) {
-    offscreenCtx.font = '12px Inter, sans-serif';
+  if (mag < 1 && !isMobile && isPointInView(x, y + 20)) {
+    offscreenCtx.font = '12px sans-serif';
     offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
     offscreenCtx.textAlign = 'center';
     offscreenCtx.fillText(name || '', x, y + 20);
   }
 }
 
-function drawGlowing(x, y, size, mag) {
-  // Vary colors slightly for artistic mode
+function drawGlowing(x, y, size) {
   const hue = 200 + Math.sin(x / 100 + y / 150) * 40;
   const saturation = 40 + Math.sin(x / 50) * 20;
   const lightness = 70 + Math.cos(y / 70) * 15;
@@ -1009,15 +711,6 @@ function drawHoverEffect(x, y, mag) {
   offscreenCtx.beginPath();
   offscreenCtx.arc(x, y, size, 0, Math.PI * 2);
   offscreenCtx.stroke();
-  
-  // Add some glow
-  const g = offscreenCtx.createRadialGradient(x, y, 0, x, y, size);
-  g.addColorStop(0, 'rgba(255, 107, 129, 0.2)');
-  g.addColorStop(1, 'transparent');
-  offscreenCtx.fillStyle = g;
-  offscreenCtx.beginPath();
-  offscreenCtx.arc(x, y, size, 0, Math.PI * 2);
-  offscreenCtx.fill();
   offscreenCtx.restore();
 }
 
@@ -1025,17 +718,6 @@ function drawHeart(x, y) {
   offscreenCtx.save();
   offscreenCtx.translate(x, y);
   
-  // Glow effect
-  const g = offscreenCtx.createRadialGradient(0, 0, 0, 0, 0, 30);
-  g.addColorStop(0, 'rgba(255, 107, 129, 0.5)');
-  g.addColorStop(1, 'transparent');
-  
-  offscreenCtx.fillStyle = g;
-  offscreenCtx.beginPath();
-  offscreenCtx.arc(0, 0, 30, 0, Math.PI * 2);
-  offscreenCtx.fill();
-  
-  // Heart shape
   offscreenCtx.beginPath();
   offscreenCtx.moveTo(0, -6);
   offscreenCtx.bezierCurveTo(8, -20, 28, -10, 0, 22);
@@ -1050,63 +732,160 @@ function drawBigHeart(x, y) {
   offscreenCtx.save();
   offscreenCtx.globalAlpha = 0.85;
   
-  // Multiple glow layers for depth
-  for (let i = 3; i >= 1; i--) {
-    const g = offscreenCtx.createRadialGradient(x, y, 0, x, y, 180 / i);
-    g.addColorStop(0, `rgba(255, 107, 129, ${0.08 / i})`);
-    g.addColorStop(1, 'transparent');
-    
-    offscreenCtx.fillStyle = g;
-    offscreenCtx.beginPath();
-    offscreenCtx.moveTo(x, y - 40 / i);
-    offscreenCtx.bezierCurveTo(x + 60 / i, y - 120 / i, x + 180 / i, y - 40 / i, x, y + 120 / i);
-    offscreenCtx.bezierCurveTo(x - 180 / i, y - 40 / i, x - 60 / i, y - 120 / i, x, y - 40 / i);
-    offscreenCtx.fill();
-  }
+  const g = offscreenCtx.createRadialGradient(x, y, 0, x, y, 180);
+  g.addColorStop(0, 'rgba(255, 107, 129, 0.08)');
+  g.addColorStop(1, 'transparent');
+  
+  offscreenCtx.fillStyle = g;
+  offscreenCtx.beginPath();
+  offscreenCtx.moveTo(x, y - 40);
+  offscreenCtx.bezierCurveTo(x + 60, y - 120, x + 180, y - 40, x, y + 120);
+  offscreenCtx.bezierCurveTo(x - 180, y - 40, x - 60, y - 120, x, y - 40);
+  offscreenCtx.fill();
   
   offscreenCtx.restore();
 }
 
-// Start the render loop
+function drawConstellationLines() {
+  constellationLines.forEach(line => {
+    offscreenCtx.beginPath();
+    offscreenCtx.moveTo(line.fromX, line.fromY);
+    offscreenCtx.lineTo(line.toX, line.toY);
+    offscreenCtx.strokeStyle = 'rgba(180, 200, 255, 0.15)';
+    offscreenCtx.lineWidth = 1;
+    offscreenCtx.stroke();
+  });
+}
+
+function findStarAt(mx, my) {
+  if (mode === 'realistic') {
+    for (let i = realisticPositions.length - 1; i >= 0; i--) {
+      const p = realisticPositions[i];
+      if (p.alt < -0.1) continue;
+      
+      const proj = projectAzAlt(p.az, p.alt);
+      const rad = Math.max(3, 6 - (p.mag || 2));
+      
+      if (Math.hypot(mx - proj.x, my - proj.y) < rad + 10) {
+        return {
+          type: 'real',
+          id: p.id,
+          name: p.name,
+          proj,
+          mag: p.mag,
+          distance: p.distance,
+          messageKey: p.messageKey
+        };
+      }
+    }
+  } else {
+    const brightStars = artisticStars.filter(s => s.mag < 1.5);
+    for (const s of brightStars) {
+      const rad = 2 + (3 - Math.min(3, s.mag));
+      if (Math.hypot(mx - s.x, my - s.y) < rad + 10) {
+        return {
+          type: 'art',
+          id: null,
+          proj: { x: s.x, y: s.y },
+          mag: s.mag
+        };
+      }
+    }
+  }
+  return null;
+}
+
+let lastRenderTime = 0;
+const renderInterval = 1000 / (isMobile ? 30 : 60); // Throttle for mobile
+
+function render(currentTime) {
+  if (currentTime - lastRenderTime < renderInterval) {
+    animationFrameId = requestAnimationFrame(render);
+    return;
+  }
+  
+  lastRenderTime = currentTime;
+  
+  offscreenCtx.clearRect(0, 0, W, H);
+  drawBackground();
+  
+  if (mode === 'realistic') {
+    drawConstellationLines();
+    
+    realisticPositions.forEach(p => {
+      if (p.alt < -0.1) return;
+      
+      const proj = projectAzAlt(p.az, p.alt);
+      const size = Math.max(1.2, 6 - p.mag);
+      const tw = 0.6 + 0.4 * Math.sin(currentTime / 300 + (p.id.length));
+      
+      if (isPointInView(proj.x, proj.y)) {
+        drawStar(proj.x, proj.y, size * tw, p.name, p.mag);
+      }
+    });
+    
+    const eventZenith = { alt: Math.PI / 2 - 0.2, az: Math.PI / 4 };
+    const evp = projectAzAlt(eventZenith.az, eventZenith.alt);
+    drawHeart(evp.x, evp.y);
+    
+    if (hoveredStar && hoveredStar.type === 'real') {
+      drawHoverEffect(hoveredStar.proj.x, hoveredStar.proj.y, hoveredStar.mag);
+    }
+  } else {
+    artisticStars.forEach(s => {
+      s.x += s.vx;
+      s.y += s.vy;
+      
+      if (s.x < -50) s.x = W + 50;
+      if (s.x > W + 50) s.x = -50;
+      if (s.y < -50) s.y = H + 50;
+      if (s.y > H + 50) s.y = -50;
+      
+      if (isPointInView(s.x, s.y)) {
+        drawGlowing(s.x, s.y, 1 + (3 - Math.min(3, s.mag)) * 0.6);
+      }
+    });
+    
+    drawBigHeart(centerX + panX, centerY + panY);
+    
+    if (hoveredStar && hoveredStar.type === 'art') {
+      drawHoverEffect(hoveredStar.proj.x, hoveredStar.proj.y, hoveredStar.mag);
+    }
+  }
+  
+  ctx.drawImage(offscreenCanvas, 0, 0);
+  animationFrameId = requestAnimationFrame(render);
+}
+
 animationFrameId = requestAnimationFrame(render);
 
-// --------------------------- UI Controls ---------------------------
-const modeToggle = document.getElementById('modeToggle');
-const modeLabel = document.getElementById('modeLabel');
-const modeText = document.getElementById('modeText');
-const modeIcon = document.getElementById('modeIcon');
-
-modeToggle.addEventListener('click', () => {
+// --------------------------- UI CONTROLS ---------------------------
+function toggleMode() {
   if (mode === 'realistic') {
     mode = 'artistic';
-    modeToggle.textContent = 'Switch to Realistic Mode';
-    modeText.textContent = 'Realistic Mode';
-    modeIcon.textContent = '🌠';
-    modeLabel.textContent = 'Artistic';
+    document.getElementById('modeText').textContent = 'Realistic Mode';
+    document.getElementById('modeIcon').textContent = '🌠';
+    document.getElementById('modeLabel').textContent = 'Artistic';
   } else {
     mode = 'realistic';
-    modeText.textContent = 'Artistic Mode';
-    modeIcon.textContent = '🌌';
-    modeLabel.textContent = 'Realistic';
-    // Recompute positions when switching back to realistic
+    document.getElementById('modeText').textContent = 'Artistic Mode';
+    document.getElementById('modeIcon').textContent = '🌌';
+    document.getElementById('modeLabel').textContent = 'Realistic';
     realisticPositions = computeRealisticPositions();
     constellationLines = generateConstellationLines();
   }
-});
+}
 
-// Date and location display
+document.getElementById('modeToggle').addEventListener('click', toggleMode);
+
 document.getElementById('dateLabel').textContent = TARGET_DATE.toLocaleString('en-US', {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
+  year: 'numeric',
   hour: '2-digit',
   minute: '2-digit'
 });
 
-document.getElementById('locationLabel').textContent = LOCATION_NAME;
-
-// reset view
 document.getElementById('resetView').addEventListener('click', () => {
   scale = 1;
   panX = 0;
@@ -1115,7 +894,6 @@ document.getElementById('resetView').addEventListener('click', () => {
   constellationLines = generateConstellationLines();
 });
 
-// zoom controls
 document.getElementById('zoomIn').addEventListener('click', () => {
   scale *= 1.2;
   scale = Math.min(2, scale);
@@ -1126,36 +904,24 @@ document.getElementById('zoomOut').addEventListener('click', () => {
   scale = Math.max(0.5, scale);
 });
 
-// download
 document.getElementById('downloadPNG').addEventListener('click', () => {
-  // Create a temporary canvas at higher resolution
   const tempCanvas = document.createElement('canvas');
   const tempCtx = tempCanvas.getContext('2d');
-  const scaleFactor = 2; // Double resolution for download
+  const scaleFactor = isMobile ? 1.5 : 2;
   
   tempCanvas.width = W * scaleFactor;
   tempCanvas.height = H * scaleFactor;
   
   // Draw everything at higher resolution
   if (mode === 'realistic') {
-    // Draw background
     const bgGradient = tempCtx.createLinearGradient(0, 0, 0, tempCanvas.height);
     bgGradient.addColorStop(0, 'rgba(10, 12, 25, 0.85)');
     bgGradient.addColorStop(1, 'rgba(6, 8, 18, 0.95)');
     tempCtx.fillStyle = bgGradient;
     tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
     
-    // Draw constellation lines
-    constellationLines.forEach(line => {
-      tempCtx.beginPath();
-      tempCtx.moveTo(line.fromX * scaleFactor, line.fromY * scaleFactor);
-      tempCtx.lineTo(line.toX * scaleFactor, line.toY * scaleFactor);
-      tempCtx.strokeStyle = 'rgba(180, 200, 255, 0.15)';
-      tempCtx.lineWidth = 1 * scaleFactor;
-      tempCtx.stroke();
-    });
+    drawConstellationLines.call({ ctx: tempCtx, scaleFactor });
     
-    // Draw stars
     realisticPositions.forEach(p => {
       if (p.alt < -0.1) return;
       
@@ -1167,61 +933,33 @@ document.getElementById('downloadPNG').addEventListener('click', () => {
       const saturation = 50;
       const lightness = 90;
       
-      // Core glow
-      const coreGradient = tempCtx.createRadialGradient(
+      const g = tempCtx.createRadialGradient(
         proj.x * scaleFactor, proj.y * scaleFactor, 0,
         proj.x * scaleFactor, proj.y * scaleFactor, size * 1.5
       );
-      coreGradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`);
-      coreGradient.addColorStop(0.7, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.2)`);
-      coreGradient.addColorStop(1, 'transparent');
+      g.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`);
+      g.addColorStop(0.7, `hsla(${hue}, ${saturation}%, ${lightness}%, 0.2)`);
+      g.addColorStop(1, 'transparent');
       
-      tempCtx.fillStyle = coreGradient;
+      tempCtx.fillStyle = g;
       tempCtx.beginPath();
       tempCtx.arc(proj.x * scaleFactor, proj.y * scaleFactor, size * 1.5, 0, Math.PI * 2);
       tempCtx.fill();
       
-      // Core
       tempCtx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       tempCtx.beginPath();
       tempCtx.arc(proj.x * scaleFactor, proj.y * scaleFactor, size * 0.5, 0, Math.PI * 2);
       tempCtx.fill();
-      
-      // Draw star name for bright stars
-      if (p.mag < 1) {
-        tempCtx.font = `${12 * scaleFactor}px Inter, sans-serif`;
-        tempCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        tempCtx.textAlign = 'center';
-        tempCtx.fillText(p.name || p.id, proj.x * scaleFactor, proj.y * scaleFactor + 20 * scaleFactor);
-      }
     });
-    
-    // Draw heart marker
-    const eventZenith = { alt: Math.PI / 2 - 0.2, az: Math.PI / 4 };
-    const evp = projectAzAlt(eventZenith.az, eventZenith.alt);
-    
-    tempCtx.save();
-    tempCtx.translate(evp.x * scaleFactor, evp.y * scaleFactor);
-    tempCtx.scale(scaleFactor, scaleFactor);
-    
-    tempCtx.beginPath();
-    tempCtx.moveTo(0, -6);
-    tempCtx.bezierCurveTo(8, -20, 28, -10, 0, 22);
-    tempCtx.bezierCurveTo(-28, -10, -8, -20, 0, -6);
-    tempCtx.fillStyle = 'rgba(255, 107, 129, 0.95)';
-    tempCtx.fill();
-    tempCtx.restore();
   } else {
-    // Artistic mode download
     const bgGradient = tempCtx.createLinearGradient(0, 0, 0, tempCanvas.height);
     bgGradient.addColorStop(0, 'rgba(10, 12, 25, 0.85)');
     bgGradient.addColorStop(1, 'rgba(6, 8, 18, 0.95)');
     tempCtx.fillStyle = bgGradient;
     tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
     
-    // Draw artistic stars
     artisticStars.forEach(s => {
-      const size = (1 + (3 - Math.min(3, s.mag)) * 0.6 * scaleFactor)
+      const size = (1 + (3 - Math.min(3, s.mag)) * 0.6 * scaleFactor;
       const hue = 200 + Math.sin(s.x / 100 + s.y / 150) * 40;
       const saturation = 40 + Math.sin(s.x / 50) * 20;
       const lightness = 70 + Math.cos(s.y / 70) * 15;
@@ -1242,28 +980,10 @@ document.getElementById('downloadPNG').addEventListener('click', () => {
       tempCtx.fill();
       tempCtx.restore();
     });
-    
-    // Draw big heart
-    tempCtx.save();
-    tempCtx.globalAlpha = 0.85;
-    tempCtx.translate(centerX * scaleFactor + panX * scaleFactor, centerY * scaleFactor + panY * scaleFactor);
-    tempCtx.scale(scaleFactor, scaleFactor);
-    
-    const g = tempCtx.createRadialGradient(0, 0, 0, 0, 0, 180);
-    g.addColorStop(0, 'rgba(255, 107, 129, 0.08)');
-    g.addColorStop(1, 'transparent');
-    
-    tempCtx.fillStyle = g;
-    tempCtx.beginPath();
-    tempCtx.moveTo(0, -40);
-    tempCtx.bezierCurveTo(60, -120, 180, -40, 0, 120);
-    tempCtx.bezierCurveTo(-180, -40, -60, -120, 0, -40);
-    tempCtx.fill();
-    tempCtx.restore();
   }
   
   // Add watermark
-  tempCtx.font = `${14 * scaleFactor}px Inter, sans-serif`;
+  tempCtx.font = `${14 * scaleFactor}px sans-serif`;
   tempCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
   tempCtx.textAlign = 'right';
   tempCtx.fillText('Our Star Map • ' + TARGET_DATE.toLocaleDateString(), 
@@ -1276,14 +996,194 @@ document.getElementById('downloadPNG').addEventListener('click', () => {
   link.click();
 });
 
-// Modal controls
-document.getElementById('closeModal').addEventListener('click', () => {
+// --------------------------- MODAL CONTROLS ---------------------------
+function openStarModal(hit) {
+  const modal = document.getElementById('starModal');
+  const title = document.getElementById('starModalTitle');
+  const info = document.getElementById('starModalInfo');
+  const text = document.getElementById('starModalText');
+  
   document.getElementById('infoPanel').classList.add('hidden');
+  
+  if (hit.type === 'real' && hit.messageKey && starMessages[hit.messageKey]) {
+    const data = starMessages[hit.messageKey];
+    title.textContent = data.title || hit.name || hit.id;
+    
+    let infoText = `Magnitude: ${hit.mag.toFixed(2)}`;
+    if (hit.distance) infoText += ` • Distance: ${hit.distance} light years`;
+    info.textContent = infoText;
+    
+    let contentHTML = `<p>${data.text}</p>`;
+    if (data.date) {
+      contentHTML += `<p class="small">${new Date(data.date).toLocaleDateString()}</p>`;
+    }
+    if (data.image) {
+      contentHTML += `<img src="${data.image}" alt="${data.title}" loading="lazy">`;
+    }
+    
+    text.innerHTML = contentHTML;
+  } else {
+    title.textContent = hit.id || 'A Special Star';
+    info.textContent = `Magnitude: ${hit.mag.toFixed(2)}`;
+    text.innerHTML = `<p>This star shines bright in our sky, just like you shine in my life.</p>`;
+  }
+  
+  modal.classList.remove('hidden');
+}
+
+function closeStarModal() {
+  document.getElementById('starModal').classList.add('hidden');
+}
+
+function toggleMessagesPanel() {
+  document.getElementById('infoPanel').classList.toggle('hidden');
+}
+
+document.getElementById('closeModal').addEventListener('click', toggleMessagesPanel);
+document.getElementById('closeStarModal').addEventListener('click', closeStarModal);
+document.getElementById('mobileToggleMessages').addEventListener('click', toggleMessagesPanel);
+
+// --------------------------- TOUCH HANDLERS ---------------------------
+function handleTouchStart(e) {
+  if (e.touches.length === 1) {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastX = touch.clientX - rect.left;
+    lastY = touch.clientY - rect.top;
+    isDragging = true;
+    
+    // Check if we're hitting a star
+    hoveredStar = findStarAt(lastX, lastY);
+  } else if (e.touches.length === 2) {
+    // Pinch zoom
+    const touch1 = e.touches[0];
+    const touch2 = e.touches[1];
+    touchZoomInitialDistance = Math.hypot(
+      touch1.clientX - touch2.clientX,
+      touch1.clientY - touch2.clientY
+    );
+  }
+}
+
+function handleTouchMove(e) {
+  if (e.touches.length === 1 && isDragging) {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const mx = touch.clientX - rect.left;
+    const my = touch.clientY - rect.top;
+    
+    panX += mx - lastX;
+    panY += my - lastY;
+    
+    lastX = mx;
+    lastY = my;
+    
+    hoveredStar = findStarAt(mx, my);
+  } else if (e.touches.length === 2 && touchZoomInitialDistance !== null) {
+    // Handle pinch zoom
+    const touch1 = e.touches[0];
+    const touch2 = e.touches[1];
+    const currentDistance = Math.hypot(
+      touch1.clientX - touch2.clientX,
+      touch1.clientY - touch2.clientY
+    );
+    
+    const delta = currentDistance / touchZoomInitialDistance;
+    const newScale = scale * delta;
+    
+    if (newScale >= 0.5 && newScale <= 2) {
+      // Calculate center point between fingers
+      const rect = canvas.getBoundingClientRect();
+      const centerX = ((touch1.clientX + touch2.clientX) / 2 - rect.left);
+      const centerY = ((touch1.clientY + touch2.clientY) / 2 - rect.top);
+      
+      // Adjust pan to zoom toward center point
+      panX = centerX - delta * (centerX - panX);
+      panY = centerY - delta * (centerY - panY);
+      
+      scale = newScale;
+    }
+    
+    touchZoomInitialDistance = currentDistance;
+  }
+}
+
+function handleTouchEnd(e) {
+  if (e.touches.length === 0) {
+    isDragging = false;
+    touchZoomInitialDistance = null;
+    
+    // If we weren't dragging much, treat it as a click
+    if (!isDragging && hoveredStar) {
+      openStarModal(hoveredStar);
+    }
+  }
+}
+
+canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+canvas.addEventListener('touchend', handleTouchEnd);
+
+// --------------------------- MOUSE HANDLERS ---------------------------
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  lastX = e.clientX - rect.left;
+  lastY = e.clientY - rect.top;
+  isDragging = true;
 });
 
-document.getElementById('closeStarModal').addEventListener('click', closeStarModal);
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  
+  if (isDragging) {
+    panX += mx - lastX;
+    panY += my - lastY;
+    lastX = mx;
+    lastY = my;
+  }
+  
+  hoveredStar = findStarAt(mx, my);
+  canvas.style.cursor = hoveredStar ? 'pointer' : (isDragging ? 'grabbing' : 'grab');
+});
 
-// populate messages list brief
+canvas.addEventListener('mouseup', () => {
+  isDragging = false;
+  canvas.style.cursor = hoveredStar ? 'pointer' : 'grab';
+});
+
+canvas.addEventListener('mouseleave', () => {
+  isDragging = false;
+  canvas.style.cursor = 'default';
+});
+
+canvas.addEventListener('click', e => {
+  if (!isDragging && hoveredStar) {
+    openStarModal(hoveredStar);
+  }
+});
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left - panX;
+  const mouseY = e.clientY - rect.top - panY;
+  
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const newScale = scale * delta;
+  
+  if (newScale < 0.5 || newScale > 2) return;
+  
+  panX = mouseX - delta * (mouseX - panX);
+  panY = mouseY - delta * (mouseY - panY);
+  
+  scale = newScale;
+}, { passive: false });
+
+// --------------------------- INITIALIZATION ---------------------------
+// Populate messages list
 function refreshMessagesList() {
   const container = document.getElementById('messagesList');
   container.innerHTML = '';
@@ -1311,10 +1211,10 @@ function refreshMessagesList() {
       
       let contentHTML = `<p>${message.text}</p>`;
       if (message.date) {
-        contentHTML += `<p class="small">${new Date(message.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>`;
+        contentHTML += `<p class="small">${new Date(message.date).toLocaleDateString()}</p>`;
       }
       if (message.image) {
-        contentHTML += `<img src="${message.image}" alt="${message.title}">`;
+        contentHTML += `<img src="${message.image}" alt="${message.title}" loading="lazy">`;
       }
       
       text.innerHTML = contentHTML;
@@ -1326,125 +1226,22 @@ function refreshMessagesList() {
     container.appendChild(btn);
   });
   
-  // Add a button to show how to add more messages
-  const addBtn = document.createElement('button');
-  addBtn.className = 'star-btn';
-  addBtn.textContent = 'Add more messages (edit the HTML file)';
-  addBtn.addEventListener('click', () => {
-    alert('To add more messages, edit the "starMessages" object in the HTML file. Add entries with your special memories!');
-  });
-  container.appendChild(addBtn);
+  if (Object.keys(starMessages).length === 0) {
+    const btn = document.createElement('button');
+    btn.className = 'star-btn';
+    btn.textContent = 'No messages yet. Edit the HTML to add your own!';
+    container.appendChild(btn);
+  }
 }
 
 refreshMessagesList();
 
-// Touch and pan handlers for mobile
-canvas.addEventListener('pointerdown', e => {
-  const rect = canvas.getBoundingClientRect();
-  lastX = e.clientX - rect.left;
-  lastY = e.clientY - rect.top;
-  isDragging = true;
-  canvas.style.cursor = 'grabbing';
-});
+// Hide info panel by default on mobile
+if (isMobile) {
+  document.getElementById('infoPanel').classList.add('hidden');
+}
 
-canvas.addEventListener('pointerup', () => {
-  isDragging = false;
-  canvas.style.cursor = hoveredStar ? 'pointer' : 'grab';
-});
-
-canvas.addEventListener('pointerleave', () => {
-  isDragging = false;
-  canvas.style.cursor = 'default';
-});
-
-canvas.addEventListener('pointermove', e => {
-  if (!isDragging) return;
-  
-  const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
-  
-  panX += mx - lastX;
-  panY += my - lastY;
-  
-  lastX = mx;
-  lastY = my;
-  
-  // Update hovered star while dragging
-  hoveredStar = findStarAt(mx, my);
-  canvas.style.cursor = hoveredStar ? 'pointer' : 'grabbing';
-});
-
-// Zoom with mouse wheel/pinch
-canvas.addEventListener('wheel', e => {
-  e.preventDefault();
-  
-  // Get mouse position relative to canvas
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left - panX;
-  const mouseY = e.clientY - rect.top - panY;
-  
-  // Calculate zoom factor
-  const delta = e.deltaY > 0 ? 0.9 : 1.1;
-  const newScale = scale * delta;
-  
-  // Limit zoom range
-  if (newScale < 0.5 || newScale > 2) return;
-  
-  // Adjust pan to zoom toward mouse position
-  panX = mouseX - delta * (mouseX - panX);
-  panY = mouseY - delta * (mouseY - panY);
-  
-  scale = newScale;
-}, { passive: false });
-
-// Handle pinch zoom on touch devices
-let initialDistance = null;
-
-canvas.addEventListener('touchstart', e => {
-  if (e.touches.length === 2) {
-    initialDistance = Math.hypot(
-      e.touches[0].clientX - e.touches[1].clientX,
-      e.touches[0].clientY - e.touches[1].clientY
-    );
-  }
-});
-
-canvas.addEventListener('touchmove', e => {
-  if (e.touches.length === 2 && initialDistance !== null) {
-    e.preventDefault();
-    
-    const currentDistance = Math.hypot(
-      e.touches[0].clientX - e.touches[1].clientX,
-      e.touches[0].clientY - e.touches[1].clientY
-    );
-    
-    const delta = currentDistance / initialDistance;
-    const newScale = scale * delta;
-    
-    // Limit zoom range
-    if (newScale >= 0.5 && newScale <= 2) {
-      // Calculate center point between fingers
-      const rect = canvas.getBoundingClientRect();
-      const centerX = ((e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left)
-      const centerY = ((e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top);
-      
-      // Adjust pan to zoom toward center point
-      panX = centerX - delta * (centerX - panX);
-      panY = centerY - delta * (centerY - panY);
-      
-      scale = newScale;
-    }
-    
-    initialDistance = currentDistance;
-  }
-});
-
-canvas.addEventListener('touchend', () => {
-  initialDistance = null;
-});
-
-// Clean up on unmount
+// Clean up
 window.addEventListener('beforeunload', () => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
@@ -1454,20 +1251,21 @@ window.addEventListener('beforeunload', () => {
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
   if (e.key === 'r' || e.key === 'R') {
-    // Reset view
-    scale = 1;
-    panX = 0;
-    panY = 0;
-    realisticPositions = computeRealisticPositions();
-    constellationLines = generateConstellationLines();
+    document.getElementById('resetView').click();
   } else if (e.key === 'm' || e.key === 'M') {
-    // Toggle mode
-    document.getElementById('modeToggle').click();
+    toggleMode();
   } else if (e.key === 'Escape') {
-    // Close modal
     closeStarModal();
   }
 });
+
+// Prevent elastic scrolling on iOS
+if (isIOS) {
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  document.body.style.height = '100%';
+}
 </script>
 </body>
 </html>
